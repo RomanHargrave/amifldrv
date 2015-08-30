@@ -1,6 +1,6 @@
 //-------------------------------------------------------------------------------------------------
-//               AMI Firmware Update Utility(APTIO)  v5.05.04
-// Copyright (C)2011 American Megatrends Inc. All Rights Reserved.
+//                     AMI Firmware Update Utility  v4.23
+// Copyright (C)2008 American Megatrends Inc. All Rights Reserved.
 //-------------------------------------------------------------------------------------------------
 #include <linux/version.h>
 #include <linux/module.h>
@@ -32,11 +32,7 @@ void            *pvArg1;
 
 AFU_ATTRIBUTE_FUNC static int wrap_open(struct inode *inode, struct file *file);
 AFU_ATTRIBUTE_FUNC static int wrap_release(struct inode *inode, struct file *file);
-#if defined(HAVE_UNLOCKED_IOCTL)
-AFU_ATTRIBUTE_FUNC static long wrap_unlocked_ioctl(struct file *filp, unsigned int cmd, unsigned long arg);
-#else
 AFU_ATTRIBUTE_FUNC static int wrap_ioctl(struct inode *inode, struct file *filp, unsigned int cmd, unsigned long arg);
-#endif
 AFU_ATTRIBUTE_FUNC static int wrap_mmap(struct file *file, struct vm_area_struct *vma);
 
 struct file_operations amifldrv_fops =
@@ -47,13 +43,8 @@ open:
     wrap_open,
 release:
     wrap_release,
-#if defined(HAVE_UNLOCKED_IOCTL)
-unlocked_ioctl:
-    wrap_unlocked_ioctl,
-#else
 ioctl:
     wrap_ioctl,
-#endif
 mmap:
     wrap_mmap,
 };
@@ -63,7 +54,7 @@ mmap:
 #define mem_map_unreserve(p) clear_bit(PG_reserved, &((p)->flags))
 MODULE_AUTHOR("American Megatrends Inc.");
 MODULE_DESCRIPTION("AMI Flash Update utility driver");
-MODULE_LICENSE("Proprietary");
+MODULE_LICENSE("Dual BSD/GPL");
 #endif
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,0)
@@ -97,23 +88,13 @@ int wrap_release(struct inode *inode, struct file *file)
 }
 
 AFU_ATTRIBUTE_FUNC
-#if defined(HAVE_UNLOCKED_IOCTL)
-long wrap_unlocked_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
-#else
 int wrap_ioctl(struct inode *inode, struct file *filp, unsigned int cmd, unsigned long arg)
-#endif
 {
-#ifndef HAVE_UNLOCKED_IOCTL
     pvArg0 = inode;
-#endif
     pvArg1 = filp;
     ulArg0 = cmd;
     ulArg1 = arg;
-#if defined(HAVE_UNLOCKED_IOCTL)
-    return (long)amifldrv_ioctl();
-#else
     return amifldrv_ioctl();
-#endif
 }
 
 AFU_ATTRIBUTE_FUNC
@@ -175,6 +156,17 @@ AFU_ATTRIBUTE_FUNC
 void wrap_kfree()
 {
     kfree(pvArg0);
+}
+
+AFU_ATTRIBUTE_FUNC
+int wrap_printk(const char *fmt, ...)
+{
+    va_list args;
+    char buffer[1024];
+    va_start(args, fmt);
+    (void) vsnprintf(buffer, sizeof(buffer), fmt, args);
+    va_end(args);
+    return printk("%s", buffer);
 }
 
 AFU_ATTRIBUTE_FUNC
