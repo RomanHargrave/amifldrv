@@ -1,7 +1,6 @@
 #include <linux/mm.h>
-#include <asm/io.h>
-#include <linux/interrupt.h>
 #include <linux/module.h>
+#include <asm/io.h>
 #include "amifldrv.h"
 #include "amiwrap.h"
 int amifldrv_ioctl(void);
@@ -90,10 +89,10 @@ int amifldrv_ioctl(void)
         kmalloc_drv[kcount].kmallocptr = kmalloc_ptr;
         kmalloc_drv[kcount].kvirtlen = kmalloc_len;
         kmalloc_drv[kcount].kvirtadd = kmalloc_area;
-        kmalloc_drv[kcount].kphysadd = (void *)((unsigned long)virt_to_phys(kmalloc_area));
+        kmalloc_drv[kcount].kphysadd = (void *)virt_to_phys(kmalloc_area);
         kcount++;
         arg_kernel_space.kvirtadd = kmalloc_area;
-        arg_kernel_space.kphysadd = (void *)((unsigned long)virt_to_phys(kmalloc_area));
+        arg_kernel_space.kphysadd = (void *)virt_to_phys(kmalloc_area);
         pvArg0 = (void*)arg;
         pvArg1 = (void*)&arg_kernel_space;
         ulArg0 = sizeof(AMIFLDRV_ALLOC);
@@ -149,12 +148,6 @@ int amifldrv_ioctl(void)
         }
         return 0;
     }
-    case CMD_LOCK_KB:
-        disable_irq(1);
-        return 0;
-    case CMD_UNLOCK_KB:
-        enable_irq(1);
-        return 0;
     }
     return -ENOTTY;
 }

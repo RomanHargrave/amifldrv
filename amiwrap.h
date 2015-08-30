@@ -1,6 +1,6 @@
 //-------------------------------------------------------------------------------------------------
-//               AMI Firmware Update Utility(APTIO) v5.05.04
-// Copyright (C)2011 American Megatrends Inc. All Rights Reserved.
+//                     AMI Firmware Update Utility  v4.23
+// Copyright (C)2008 American Megatrends Inc. All Rights Reserved.
 //-------------------------------------------------------------------------------------------------
 #define AFU_ATTRIBUTE_FUNC
 AFU_ATTRIBUTE_FUNC int wrap_register_chrdev(void);
@@ -11,6 +11,7 @@ AFU_ATTRIBUTE_FUNC int wrap_remap_page_range(void);
 AFU_ATTRIBUTE_FUNC struct page *wrap_virt_to_page(void);
 AFU_ATTRIBUTE_FUNC void *wrap_kmalloc(void);
 AFU_ATTRIBUTE_FUNC void wrap_kfree(void);
+AFU_ATTRIBUTE_FUNC int wrap_printk(const char *fmt, ...);
 AFU_ATTRIBUTE_FUNC unsigned long wrap_copy_from_user(void);
 AFU_ATTRIBUTE_FUNC unsigned long wrap_copy_to_user(void);
 extern unsigned long   ulArg0;
