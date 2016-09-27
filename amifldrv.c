@@ -23,10 +23,10 @@
 #   define mem_map_unreserve(p) clear_bit(PG_reserved, &((p)->flags)) 
 #endif 
 
-static int const CMD_ALLOC      = 0x4160;
-static int const CMD_FREE       = 0x4161;
-static int const CMD_LOCK_KB    = 0x4162;
-static int const CMD_UNLOCK_KB  = 0x4163;
+#define CMD_ALLOC       0x4160
+#define CMD_FREE        0x4161
+#define CMD_LOCK_KB     0x4162
+#define CMD_UNLOCK_KB   0x4163
 
 /*
  * ioctl data packet used to communicate instructions to the driver
