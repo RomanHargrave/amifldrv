@@ -1,5 +1,7 @@
 # amifldrv source code
 
+***This repository is not maintained, and its utility has never been guaranteed. It may not work with newer AMI hardware. Your mileage may vary.***
+
 This is the source code for the `amifldrv` kernel module used by the AMI
 Aptios flashing tool for linux, `afulnx`. This is associated with the
 _64-Bit_ version of the tool, and I _cannot_ guarantee that it will work
